@@ -38,13 +38,28 @@ jobs:
       - name: SSH key and known_hosts
         env:
           SSH_PRIVATE_KEY: ${{ secrets.TIMEWEB_SSH_KEY }}
+          TIMEWEB_HOST: ${{ secrets.TIMEWEB_HOST }}
         run: |
           set -euo pipefail
+          if [[ -z "${SSH_PRIVATE_KEY:-}" ]]; then
+            echo "::error::Секрет TIMEWEB_SSH_KEY пустой. Добавьте его в Settings → Secrets репозитория alphabet (как у intellectshop.frontend)."
+            exit 1
+          fi
+          if [[ -z "${TIMEWEB_HOST:-}" ]]; then
+            echo "::error::Секрет TIMEWEB_HOST пустой."
+            exit 1
+          fi
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/timeweb_deploy
           chmod 600 ~/.ssh/timeweb_deploy
-          ssh-keyscan -H "${{ secrets.TIMEWEB_HOST }}" >> ~/.ssh/known_hosts
+          touch ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          if ! ssh-keyscan -H -t rsa,ecdsa,ed25519 "$TIMEWEB_HOST" >> ~/.ssh/known_hosts 2>/tmp/keyscan.err; then
+            echo "::error::ssh-keyscan не смог получить ключ хоста $TIMEWEB_HOST"
+            cat /tmp/keyscan.err || true
+            exit 1
+          fi
 
       - name: Rsync build/web → Timeweb …/alphabet
         env:
