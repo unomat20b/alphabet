@@ -6,6 +6,8 @@ import '../data/alphabets/georgian_letter_options.dart';
 import '../data/alphabets/georgian_button_rows.dart';
 import '../data/alphabets/hindi.dart';
 import '../data/alphabets/hindi_button_map.dart';
+import '../data/alphabets/hindi_letter_options.dart';
+import '../data/alphabets/hindi_button_rows.dart';
 import '../data/alphabets/english_to_georgian.dart';
 import '../data/alphabets/english_georgian_button_map.dart';
 import '../data/alphabets/english_to_hindi.dart';
@@ -143,6 +145,8 @@ class LanguageSelectScreen extends StatelessWidget {
                         builder: (_) => TextSourceScreen(
                           pairs: isEnglish ? englishToHindiMap : russianToHindiMap,
                           buttonPairs: isEnglish ? englishHindiButtonMap : hindiButtonMap,
+                          letterOptions: hindiLetterOptions,
+                          buttonRows: hindiButtonRows,
                         ),
                       ),
                     );

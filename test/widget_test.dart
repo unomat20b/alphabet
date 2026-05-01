@@ -9,9 +9,13 @@ import 'package:alfabet/app.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+Future<void> main() async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
+  await EasyLocalization.ensureInitialized();
 
-void main() {
   testWidgets('App builds', (WidgetTester tester) async {
     await tester.pumpWidget(
       EasyLocalization(
@@ -22,6 +26,8 @@ void main() {
       ),
     );
 
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }

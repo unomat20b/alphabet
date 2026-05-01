@@ -3,6 +3,7 @@ import 'package:alfabet/logic/replacer.dart';
 import 'package:alfabet/data/alphabets/georgian.dart';
 import 'package:alfabet/data/alphabets/hindi.dart';
 import 'package:alfabet/data/alphabets/georgian_letter_options.dart';
+import 'package:alfabet/data/alphabets/hindi_letter_options.dart';
 
 void main() {
   test('Uppercase Р transforms to Georgian რ', () {
@@ -60,18 +61,19 @@ void main() {
 
   test('Digraph RI overrides single letters when selected', () {
     const input = 'рис';
+    // Остальные буквы тоже должны быть в selected — иначе replacer оставит кириллицу.
     final onlySingles = transformWithSelected(
       input,
       russianToHindiMap,
-      {'र', 'इ'},
+      {'र', 'इ', 'स'},
     );
     final withDigraph = transformWithSelected(
       input,
       russianToHindiMap,
-      {'र', 'इ', 'ऋ'},
+      {'ऋ', 'स'},
     );
     expect(onlySingles, 'रइस');
-    expect(withDigraph, 'ऋс');
+    expect(withDigraph, 'ऋस');
   });
 
   test('Letter options use selected replacement', () {
@@ -90,5 +92,23 @@ void main() {
     );
     expect(defaultRes, 'ყყ');
     expect(altRes, 'კკ');
+  });
+
+  test('Hindi: same Russian т maps to dental or retroflex via letter options', () {
+    const input = 'тт';
+    final dental = transformWithSelected(
+      input,
+      russianToHindiMap,
+      {'त'},
+      hindiLetterOptions,
+    );
+    final retroflex = transformWithSelected(
+      input,
+      russianToHindiMap,
+      {'ट'},
+      hindiLetterOptions,
+    );
+    expect(dental, 'तत');
+    expect(retroflex, 'टट');
   });
 }
