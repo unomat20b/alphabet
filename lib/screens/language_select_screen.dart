@@ -18,6 +18,12 @@ import '../data/alphabets/armenian_letter_options.dart';
 import '../data/alphabets/armenian_button_rows.dart';
 import '../data/alphabets/english_to_armenian.dart';
 import '../data/alphabets/english_armenian_button_map.dart';
+import '../data/alphabets/greek.dart';
+import '../data/alphabets/greek_button_map.dart';
+import '../data/alphabets/greek_letter_options.dart';
+import '../data/alphabets/greek_button_rows.dart';
+import '../data/alphabets/english_to_greek.dart';
+import '../data/alphabets/english_greek_button_map.dart';
 import 'text_source_screen.dart';
 
 class LanguageSelectScreen extends StatelessWidget {
@@ -170,6 +176,23 @@ class LanguageSelectScreen extends StatelessWidget {
                           buttonPairs: isEnglish ? englishArmenianButtonMap : armenianButtonMap,
                           letterOptions: armenianLetterOptions,
                           buttonRows: armenianButtonRows,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: Text('greek'.tr()),
+                  onTap: () {
+                    final isEnglish = context.locale.languageCode == 'en';
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TextSourceScreen(
+                          pairs: isEnglish ? englishToGreekMap : russianToGreekMap,
+                          buttonPairs: isEnglish ? englishGreekButtonMap : greekButtonMap,
+                          letterOptions: greekLetterOptions,
+                          buttonRows: greekButtonRows,
                         ),
                       ),
                     );

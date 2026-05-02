@@ -6,6 +6,8 @@ import 'package:alfabet/data/alphabets/georgian_letter_options.dart';
 import 'package:alfabet/data/alphabets/hindi_letter_options.dart';
 import 'package:alfabet/data/alphabets/armenian.dart';
 import 'package:alfabet/data/alphabets/armenian_letter_options.dart';
+import 'package:alfabet/data/alphabets/greek.dart';
+import 'package:alfabet/data/alphabets/greek_letter_options.dart';
 
 void main() {
   test('Uppercase Р transforms to Georgian რ', () {
@@ -94,6 +96,28 @@ void main() {
     );
     expect(defaultRes, 'ყყ');
     expect(altRes, 'კკ');
+  });
+
+  test('Greek: Russian а maps to α', () {
+    expect(transformText('а', russianToGreekMap), 'α');
+  });
+
+  test('Greek: ο/ω via letter options', () {
+    const input = 'оо';
+    final omicron = transformWithSelected(
+      input,
+      russianToGreekMap,
+      {'ο'},
+      greekLetterOptions,
+    );
+    final omega = transformWithSelected(
+      input,
+      russianToGreekMap,
+      {'ω'},
+      greekLetterOptions,
+    );
+    expect(omicron, 'οο');
+    expect(omega, 'ωω');
   });
 
   test('Armenian: Russian а maps to ա', () {
