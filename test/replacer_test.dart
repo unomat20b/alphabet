@@ -8,6 +8,7 @@ import 'package:alfabet/data/alphabets/armenian.dart';
 import 'package:alfabet/data/alphabets/armenian_letter_options.dart';
 import 'package:alfabet/data/alphabets/greek.dart';
 import 'package:alfabet/data/alphabets/greek_letter_options.dart';
+import 'package:alfabet/data/alphabets/english_to_greek.dart';
 
 void main() {
   test('Uppercase Р transforms to Georgian რ', () {
@@ -100,6 +101,10 @@ void main() {
 
   test('Greek: Russian а maps to α', () {
     expect(transformText('а', russianToGreekMap), 'α');
+  });
+
+  test('Transcription: Latin a via englishToGreekMap', () {
+    expect(transformText('a', englishToGreekMap), 'α');
   });
 
   test('Greek: ο/ω via letter options', () {

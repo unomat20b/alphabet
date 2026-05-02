@@ -158,6 +158,7 @@ class LanguageSelectScreen extends StatelessWidget {
                         builder: (_) => TextSourceScreen(
                           pairs: isEnglish ? englishToGeorgianMap : russianToGeorgianMap,
                           buttonPairs: isEnglish ? englishGeorgianButtonMap : georgianButtonMap,
+                          latinToTargetMap: englishToGeorgianMap,
                           letterOptions: georgianLetterOptions,
                           buttonRows: georgianButtonRows,
                         ),
@@ -175,6 +176,7 @@ class LanguageSelectScreen extends StatelessWidget {
                         builder: (_) => TextSourceScreen(
                           pairs: isEnglish ? englishToHindiMap : russianToHindiMap,
                           buttonPairs: isEnglish ? englishHindiButtonMap : hindiButtonMap,
+                          latinToTargetMap: englishToHindiMap,
                           letterOptions: hindiLetterOptions,
                           buttonRows: hindiButtonRows,
                         ),
@@ -192,6 +194,7 @@ class LanguageSelectScreen extends StatelessWidget {
                         builder: (_) => TextSourceScreen(
                           pairs: isEnglish ? englishToArmenianMap : russianToArmenianMap,
                           buttonPairs: isEnglish ? englishArmenianButtonMap : armenianButtonMap,
+                          latinToTargetMap: englishToArmenianMap,
                           letterOptions: armenianLetterOptions,
                           buttonRows: armenianButtonRows,
                         ),
@@ -209,6 +212,7 @@ class LanguageSelectScreen extends StatelessWidget {
                         builder: (_) => TextSourceScreen(
                           pairs: isEnglish ? englishToGreekMap : russianToGreekMap,
                           buttonPairs: isEnglish ? englishGreekButtonMap : greekButtonMap,
+                          latinToTargetMap: englishToGreekMap,
                           letterOptions: greekLetterOptions,
                           buttonRows: greekButtonRows,
                         ),
