@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/language_select_screen.dart';
 import 'screens/alphabet_select_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'theme/telegram_theme.dart';
 
 class AlfabetApp extends StatefulWidget {
   const AlfabetApp({super.key});
@@ -38,16 +39,8 @@ class _AlfabetAppState extends State<AlfabetApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Alfabet',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
+      theme: telegramLightTheme(),
+      darkTheme: telegramDarkTheme(),
       themeMode: _themeMode,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
@@ -60,9 +53,9 @@ class _AlfabetAppState extends State<AlfabetApp> {
             ),
       routes: {
         '/select-language': (context) => LanguageSelectScreen(
-              onThemeChanged: setThemeMode,
-              themeMode: _themeMode,
-            ),
+          onThemeChanged: setThemeMode,
+          themeMode: _themeMode,
+        ),
         '/select-alphabet': (context) => const AlphabetSelectScreen(),
       },
     );
@@ -75,12 +68,13 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SizedBox.expand(
         child: Image.asset(
           'assets/splash_logo.png',
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.language, size: 120)),
+          errorBuilder: (_, __, ___) =>
+              const Center(child: Icon(Icons.language, size: 120)),
         ),
       ),
     );

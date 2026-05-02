@@ -45,18 +45,14 @@ class _EditScreenState extends State<EditScreen> {
         ? [Colors.white, const Color(0xFFFFF8E1)] // белый, светло-бежевый
         : [Colors.black, const Color(0xFF795548)]; // чёрный, коричневый
   }
+
   List<String> get _colorNames {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return isDark
-        ? ['Белый', 'Светло-бежевый']
-        : ['Чёрный', 'Коричневый'];
+    return isDark ? ['Белый', 'Светло-бежевый'] : ['Чёрный', 'Коричневый'];
   }
-  final List<String> _fontOptions = [
-    'default', 'serif',
-  ];
-  final List<String> _fontNames = [
-    'Стандартный', 'С засечками',
-  ];
+
+  final List<String> _fontOptions = ['default', 'serif'];
+  final List<String> _fontNames = ['Стандартный', 'С засечками'];
 
   @override
   void initState() {
@@ -70,7 +66,9 @@ class _EditScreenState extends State<EditScreen> {
     // Если выбран стандартный цвет, меняем его при смене темы
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final Color standard = isDark ? Colors.white : Colors.black;
-    if (!_colorOptions.contains(_textColor) || _textColor == Colors.white || _textColor == Colors.black) {
+    if (!_colorOptions.contains(_textColor) ||
+        _textColor == Colors.white ||
+        _textColor == Colors.black) {
       setState(() {
         _textColor = standard;
       });
@@ -133,7 +131,9 @@ class _EditScreenState extends State<EditScreen> {
                       IconButton(
                         icon: const Icon(Icons.text_decrease),
                         onPressed: _fontSizeIndex > 0
-                            ? () => setState(() { if (_fontSizeIndex > 0) _fontSizeIndex--; })
+                            ? () => setState(() {
+                                if (_fontSizeIndex > 0) _fontSizeIndex--;
+                              })
                             : null,
                       ),
                       Text('а', style: TextStyle(fontSize: _fontSizes[0])),
@@ -142,7 +142,11 @@ class _EditScreenState extends State<EditScreen> {
                       IconButton(
                         icon: const Icon(Icons.text_increase),
                         onPressed: _fontSizeIndex < _fontSizes.length - 1
-                            ? () => setState(() { if (_fontSizeIndex < _fontSizes.length - 1) _fontSizeIndex++; })
+                            ? () => setState(() {
+                                if (_fontSizeIndex < _fontSizes.length - 1) {
+                                  _fontSizeIndex++;
+                                }
+                              })
                             : null,
                       ),
                     ],
@@ -156,14 +160,15 @@ class _EditScreenState extends State<EditScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: GestureDetector(
-                            onTap: () => setState(() => _textColor = _colorOptions[i]),
+                            onTap: () =>
+                                setState(() => _textColor = _colorOptions[i]),
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: _isCurrentColor(i)
                                       ? Theme.of(context).colorScheme.primary
-                                      : Colors.grey,
+                                      : Theme.of(context).colorScheme.outline,
                                   width: 3,
                                 ),
                               ),
@@ -204,7 +209,8 @@ class _EditScreenState extends State<EditScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final Color standard = isDark ? Colors.white : Colors.black;
     // Если выбран стандартный цвет, галочка всегда на актуальном стандартном
-    if ((_textColor == Colors.white || _textColor == Colors.black) && _colorOptions[i] == standard) {
+    if ((_textColor == Colors.white || _textColor == Colors.black) &&
+        _colorOptions[i] == standard) {
       return true;
     }
     return _textColor == _colorOptions[i];
@@ -230,15 +236,23 @@ class _EditScreenState extends State<EditScreen> {
           children: [
             Text(
               'result_label'.tr(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.65),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: SingleChildScrollView(
                   child: SelectableText(
@@ -274,4 +288,3 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 }
-

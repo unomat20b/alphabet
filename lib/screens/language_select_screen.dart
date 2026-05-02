@@ -26,6 +26,7 @@ import '../data/alphabets/greek_button_rows.dart';
 import '../data/alphabets/english_to_greek.dart';
 import '../data/alphabets/english_greek_button_map.dart';
 import 'text_source_screen.dart';
+import '../widgets/telegram_section_card.dart';
 
 final Uri _boostyDonateUri = Uri.parse('https://boosty.to/daysw/donate');
 
@@ -43,102 +44,142 @@ class LanguageSelectScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
+              margin: EdgeInsets.zero,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
               ),
-              child: Text(
-                'app_title'.tr(),
-                style: const TextStyle(fontSize: 24, color: Colors.white),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  'app_title'.tr(),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    letterSpacing: -0.3,
+                  ),
+                ),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.language),
-              title: Text('language'.tr()),
-              trailing: DropdownButton<Locale>(
-                value: context.locale,
-                items: [
-                  DropdownMenuItem(
-                    value: const Locale('ru'),
-                    child: Text('russian'.tr()),
+            TelegramSectionCard(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.language_outlined),
+                    title: Text('language'.tr()),
+                    trailing: DropdownButton<Locale>(
+                      underline: const SizedBox.shrink(),
+                      value: context.locale,
+                      items: [
+                        DropdownMenuItem(
+                          value: const Locale('ru'),
+                          child: Text('russian'.tr()),
+                        ),
+                        DropdownMenuItem(
+                          value: const Locale('en'),
+                          child: Text('english'.tr()),
+                        ),
+                      ],
+                      onChanged: (locale) {
+                        if (locale != null) {
+                          context.setLocale(locale);
+                        }
+                      },
+                    ),
                   ),
-                  DropdownMenuItem(
-                    value: const Locale('en'),
-                    child: Text('english'.tr()),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: Icon(
+                      themeMode == ThemeMode.dark
+                          ? Icons.dark_mode_outlined
+                          : Icons.light_mode_outlined,
+                    ),
+                    title: Text(
+                      themeMode == ThemeMode.dark
+                          ? 'dark_theme'.tr()
+                          : 'light_theme'.tr(),
+                    ),
+                    trailing: Switch(
+                      value: themeMode == ThemeMode.dark,
+                      onChanged: (val) {
+                        if (onThemeChanged != null) {
+                          onThemeChanged!(
+                            val ? ThemeMode.dark : ThemeMode.light,
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ],
-                onChanged: (locale) {
-                  if (locale != null) {
-                    context.setLocale(locale);
-                  }
-                },
               ),
             ),
-            ListTile(
-              leading: Icon(themeMode == ThemeMode.dark ? Icons.dark_mode : Icons.light_mode),
-              title: Text(themeMode == ThemeMode.dark ? 'dark_theme'.tr() : 'light_theme'.tr()),
-              trailing: Switch(
-                value: themeMode == ThemeMode.dark,
-                onChanged: (val) {
-                  if (onThemeChanged != null) {
-                    onThemeChanged!(val ? ThemeMode.dark : ThemeMode.light);
-                  }
-                },
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: Text('about'.tr()),
-              onTap: () {
-                Navigator.pop(context);
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
+            TelegramSectionCard(
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.info_outline),
                     title: Text('about'.tr()),
-                    content: Text('about_text'.tr()),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text('ok'.tr()),
-                      ),
-                    ],
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('about'.tr()),
+                          content: SingleChildScrollView(
+                            child: Text('about_text'.tr()),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text('ok'.tr()),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.lightbulb_outline),
-              title: Text('tips'.tr()),
-              onTap: () {
-                Navigator.pop(context);
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.lightbulb_outline),
                     title: Text('tips'.tr()),
-                    content: Text('tips_text'.tr()),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text('ok'.tr()),
-                      ),
-                    ],
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('tips'.tr()),
+                          content: SingleChildScrollView(
+                            child: Text('tips_text'.tr()),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text('ok'.tr()),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.volunteer_activism_outlined),
-              title: Text('donate'.tr()),
-              onTap: () async {
-                Navigator.pop(context);
-                final ok = await launchUrl(
-                  _boostyDonateUri,
-                  mode: LaunchMode.externalApplication,
-                );
-                if (!context.mounted || ok) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('donate_error'.tr())),
-                );
-              },
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.volunteer_activism_outlined),
+                    title: Text('donate'.tr()),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final ok = await launchUrl(
+                        _boostyDonateUri,
+                        mode: LaunchMode.externalApplication,
+                      );
+                      if (!context.mounted || ok) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('donate_error'.tr())),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -147,78 +188,111 @@ class LanguageSelectScreen extends StatelessWidget {
         children: [
           Expanded(
             child: ListView(
+              padding: const EdgeInsets.only(top: 8, bottom: 88),
               children: [
-                ListTile(
-                  title: Text('georgian'.tr()),
-                  onTap: () {
-                    final isEnglish = context.locale.languageCode == 'en';
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TextSourceScreen(
-                          pairs: isEnglish ? englishToGeorgianMap : russianToGeorgianMap,
-                          buttonPairs: isEnglish ? englishGeorgianButtonMap : georgianButtonMap,
-                          latinToTargetMap: englishToGeorgianMap,
-                          letterOptions: georgianLetterOptions,
-                          buttonRows: georgianButtonRows,
+                TelegramSectionCard(
+                  child: ListTile(
+                    leading: const Icon(Icons.abc_outlined),
+                    title: Text('georgian'.tr()),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      final isEnglish = context.locale.languageCode == 'en';
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TextSourceScreen(
+                            pairs: isEnglish
+                                ? englishToGeorgianMap
+                                : russianToGeorgianMap,
+                            buttonPairs: isEnglish
+                                ? englishGeorgianButtonMap
+                                : georgianButtonMap,
+                            latinToTargetMap: englishToGeorgianMap,
+                            letterOptions: georgianLetterOptions,
+                            buttonRows: georgianButtonRows,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-                ListTile(
-                  title: Text('hindi'.tr()),
-                  onTap: () {
-                    final isEnglish = context.locale.languageCode == 'en';
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TextSourceScreen(
-                          pairs: isEnglish ? englishToHindiMap : russianToHindiMap,
-                          buttonPairs: isEnglish ? englishHindiButtonMap : hindiButtonMap,
-                          latinToTargetMap: englishToHindiMap,
-                          letterOptions: hindiLetterOptions,
-                          buttonRows: hindiButtonRows,
+                TelegramSectionCard(
+                  child: ListTile(
+                    leading: const Icon(Icons.translate_outlined),
+                    title: Text('hindi'.tr()),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      final isEnglish = context.locale.languageCode == 'en';
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TextSourceScreen(
+                            pairs: isEnglish
+                                ? englishToHindiMap
+                                : russianToHindiMap,
+                            buttonPairs: isEnglish
+                                ? englishHindiButtonMap
+                                : hindiButtonMap,
+                            latinToTargetMap: englishToHindiMap,
+                            letterOptions: hindiLetterOptions,
+                            buttonRows: hindiButtonRows,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-                ListTile(
-                  title: Text('armenian'.tr()),
-                  onTap: () {
-                    final isEnglish = context.locale.languageCode == 'en';
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TextSourceScreen(
-                          pairs: isEnglish ? englishToArmenianMap : russianToArmenianMap,
-                          buttonPairs: isEnglish ? englishArmenianButtonMap : armenianButtonMap,
-                          latinToTargetMap: englishToArmenianMap,
-                          letterOptions: armenianLetterOptions,
-                          buttonRows: armenianButtonRows,
+                TelegramSectionCard(
+                  child: ListTile(
+                    leading: const Icon(Icons.font_download_outlined),
+                    title: Text('armenian'.tr()),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      final isEnglish = context.locale.languageCode == 'en';
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TextSourceScreen(
+                            pairs: isEnglish
+                                ? englishToArmenianMap
+                                : russianToArmenianMap,
+                            buttonPairs: isEnglish
+                                ? englishArmenianButtonMap
+                                : armenianButtonMap,
+                            latinToTargetMap: englishToArmenianMap,
+                            letterOptions: armenianLetterOptions,
+                            buttonRows: armenianButtonRows,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-                ListTile(
-                  title: Text('greek'.tr()),
-                  onTap: () {
-                    final isEnglish = context.locale.languageCode == 'en';
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TextSourceScreen(
-                          pairs: isEnglish ? englishToGreekMap : russianToGreekMap,
-                          buttonPairs: isEnglish ? englishGreekButtonMap : greekButtonMap,
-                          latinToTargetMap: englishToGreekMap,
-                          letterOptions: greekLetterOptions,
-                          buttonRows: greekButtonRows,
+                TelegramSectionCard(
+                  child: ListTile(
+                    leading: const Icon(Icons.menu_book_outlined),
+                    title: Text('greek'.tr()),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      final isEnglish = context.locale.languageCode == 'en';
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TextSourceScreen(
+                            pairs: isEnglish
+                                ? englishToGreekMap
+                                : russianToGreekMap,
+                            buttonPairs: isEnglish
+                                ? englishGreekButtonMap
+                                : greekButtonMap,
+                            latinToTargetMap: englishToGreekMap,
+                            letterOptions: greekLetterOptions,
+                            buttonRows: greekButtonRows,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -231,7 +305,7 @@ class LanguageSelectScreen extends StatelessWidget {
             context: context,
             builder: (context) => AlertDialog(
               title: Text('about'.tr()),
-              content: Text('about_text'.tr()),
+              content: SingleChildScrollView(child: Text('about_text'.tr())),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),

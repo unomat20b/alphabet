@@ -23,9 +23,7 @@ class CharacterPairKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final optionMap = options ?? <String, List<String>>{};
-    final skip = optionMap.values
-        .expand((list) => list.skip(1))
-        .toSet();
+    final skip = optionMap.values.expand((list) => list.skip(1)).toSet();
     final Map<String, Set<String>> grouped = {};
     for (final entry in pairs.entries) {
       final geo = entry.key;
@@ -74,8 +72,9 @@ class CharacterPairKeyboard extends StatelessWidget {
                         russian: grouped[char]!.join(', '),
                         options: optionMap[char],
                         active: optionMap.containsKey(char)
-                            ? optionMap[char]!
-                                .any((c) => activeChars.contains(c))
+                            ? optionMap[char]!.any(
+                                (c) => activeChars.contains(c),
+                              )
                             : activeChars.contains(char),
                         onToggle: onToggle,
                       ),
@@ -103,17 +102,13 @@ class CharacterPairKeyboard extends StatelessWidget {
                 russian: entry.value.join(', '),
                 options: optionMap[entry.key],
                 active: optionMap.containsKey(entry.key)
-                    ? optionMap[entry.key]!
-                        .any((c) => activeChars.contains(c))
+                    ? optionMap[entry.key]!.any((c) => activeChars.contains(c))
                     : activeChars.contains(entry.key),
                 onToggle: onToggle,
               ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [toggleButton],
-        ),
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: [toggleButton]),
       ],
     );
   }
@@ -136,12 +131,16 @@ class _CharacterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    final scheme = Theme.of(context).colorScheme;
+    return FilledButton(
       onPressed: () async {
         if (options != null && options!.length > 1) {
           final selected = await showDialog<String>(
             context: context,
             builder: (context) => SimpleDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
               children: [
                 for (final opt in options!)
                   SimpleDialogOption(
@@ -156,19 +155,19 @@ class _CharacterButton extends StatelessWidget {
           onToggle(options?.first ?? georgian);
         }
       },
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      style: FilledButton.styleFrom(
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         backgroundColor: active
-            ? Theme.of(context).colorScheme.primaryContainer
-            : null,
+            ? scheme.primaryContainer
+            : scheme.surfaceContainerHigh,
+        foregroundColor: active ? scheme.onPrimaryContainer : scheme.onSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            russian,
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text(russian, style: const TextStyle(fontSize: 12)),
           Text(
             georgian,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -183,19 +182,21 @@ class _KeyboardToggleButton extends StatelessWidget {
   final bool active;
   final VoidCallback onPressed;
 
-  const _KeyboardToggleButton({
-    required this.active,
-    required this.onPressed,
-  });
+  const _KeyboardToggleButton({required this.active, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    final scheme = Theme.of(context).colorScheme;
+    return FilledButton(
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-        backgroundColor:
-            active ? Theme.of(context).colorScheme.primaryContainer : null,
+      style: FilledButton.styleFrom(
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        backgroundColor: active
+            ? scheme.primaryContainer
+            : scheme.surfaceContainerHigh,
+        foregroundColor: active ? scheme.onPrimaryContainer : scheme.onSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       child: const Text(
         '⌨️',

@@ -46,34 +46,32 @@ class _InputScreenState extends State<InputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: Text('enter_text'.tr())),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               'paste_or_type'.tr(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: scheme.onSurface,
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _controller,
-              maxLines: 5,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: 'sample_placeholder'.tr(),
-              ),
+              maxLines: 8,
+              decoration: InputDecoration(hintText: 'sample_placeholder'.tr()),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _start,
-              child: Text('start'.tr()),
-            ),
+            const SizedBox(height: 16),
+            FilledButton(onPressed: _start, child: Text('start'.tr())),
           ],
         ),
       ),
     );
   }
 }
-

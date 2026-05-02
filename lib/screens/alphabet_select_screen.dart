@@ -7,23 +7,19 @@ class AlphabetSelectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('choose_language'.tr()),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text('choose_language'.tr()), centerTitle: true),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             LanguageOption(
               label: 'russian'.tr(),
               onTap: () {
-                // TODO: сохранить выбор языка (например, в Provider или SharedPreferences)
                 Navigator.pushNamed(context, '/select-alphabet');
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             LanguageOption(
               label: 'english'.tr(),
               onTap: () {
@@ -41,23 +37,22 @@ class LanguageOption extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const LanguageOption({
-    super.key,
-    required this.label,
-    required this.onTap,
-  });
+  const LanguageOption({super.key, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return FilledButton(
       onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-        minimumSize: const Size.fromHeight(60),
-        textStyle: const TextStyle(fontSize: 20),
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 28),
+        minimumSize: const Size.fromHeight(56),
+        textStyle: const TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+          letterSpacing: -0.2,
+        ),
       ),
       child: Text(label),
     );
   }
 }
-

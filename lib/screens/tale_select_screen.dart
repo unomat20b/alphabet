@@ -3,6 +3,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:easy_localization/easy_localization.dart';
 
 import 'edit_screen.dart';
+import '../widgets/telegram_section_card.dart';
 
 class TaleSelectScreen extends StatefulWidget {
   final Map<String, String> pairs;
@@ -80,19 +81,27 @@ class _TaleSelectScreenState extends State<TaleSelectScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           final tales = snapshot.data!;
-          return ListView.builder(
-            itemCount: tales.length,
-            itemBuilder: (context, index) {
-              final tale = tales[index];
-              return ListTile(
-                title: Text(tale.title),
-                onTap: () => _openTale(tale.asset),
-              );
-            },
+          return ListView(
+            padding: const EdgeInsets.only(top: 8, bottom: 24),
+            children: [
+              TelegramSectionCard(
+                child: Column(
+                  children: [
+                    for (var i = 0; i < tales.length; i++) ...[
+                      if (i > 0) const Divider(height: 1),
+                      ListTile(
+                        title: Text(tales[i].title),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => _openTale(tales[i].asset),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           );
         },
       ),
     );
   }
 }
-

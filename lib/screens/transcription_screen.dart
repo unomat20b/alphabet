@@ -40,6 +40,7 @@ class _TranscriptionScreenState extends State<TranscriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: Text('transcription'.tr())),
       body: Padding(
@@ -47,7 +48,10 @@ class _TranscriptionScreenState extends State<TranscriptionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('transcription_hint'.tr()),
+            Text(
+              'transcription_hint'.tr(),
+              style: TextStyle(color: scheme.onSurfaceVariant, height: 1.4),
+            ),
             const SizedBox(height: 12),
             TextField(
               controller: _controller,
@@ -55,30 +59,31 @@ class _TranscriptionScreenState extends State<TranscriptionScreen> {
               textCapitalization: TextCapitalization.none,
               decoration: InputDecoration(
                 hintText: 'transcription_placeholder'.tr(),
-                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
-            FilledButton(
-              onPressed: _convert,
-              child: Text('transcribe'.tr()),
-            ),
+            FilledButton(onPressed: _convert, child: Text('transcribe'.tr())),
             const SizedBox(height: 16),
             Text(
               'result_label'.tr(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: scheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             Expanded(
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
+                  color: scheme.surfaceContainerHighest.withValues(alpha: 0.65),
+                  border: Border.all(color: scheme.outlineVariant),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(12),
                   child: SelectableText(
                     _result.isEmpty ? '—' : _result,
+                    style: TextStyle(color: scheme.onSurface),
                   ),
                 ),
               ),
@@ -90,9 +95,9 @@ class _TranscriptionScreenState extends State<TranscriptionScreen> {
                   : () async {
                       await Clipboard.setData(ClipboardData(text: _result));
                       if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('copied'.tr())),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('copied'.tr())));
                     },
               icon: const Icon(Icons.copy_outlined),
               label: Text('copy_result'.tr()),
