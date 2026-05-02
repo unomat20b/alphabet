@@ -25,6 +25,8 @@
   "result_label": "Result:",
   "light_theme": "Light theme",
   "dark_theme": "Dark theme",
+  "donate": "Support (Boosty)",
+  "donate_error": "Could not open the link",
   "tips": "Tips",
   "tips_text": "1. Start with vowels. First, replace only the vowels with letters from the new alphabet. This is easier and helps you get used to the new symbols.\n\n2. Don't rush! Don't try to replace all the letters at once. Read familiar text, gradually adding new letters so your brain can adapt.\n\n3. Read with partial replacements. Read the same familiar text for a long time, gradually increasing the number of replaced letters. This is more effective than switching to full replacement immediately.\n\n4. Move to consonants after vowels. Once you've memorized the vowels, start replacing consonants.\n\n5. Leave complex paired sounds for later. Combinations like CH, TCH, DJ are best learned after you've mastered individual vowels and consonants.\n\n6. Use pop-up options for similar sounds. If a letter has several writing options, choose the most suitable one via the pop-up.",
   "ok": "OK"

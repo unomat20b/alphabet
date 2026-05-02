@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../data/alphabets/georgian.dart';
 import '../data/alphabets/georgian_button_map.dart';
 import '../data/alphabets/georgian_letter_options.dart';
@@ -25,6 +26,8 @@ import '../data/alphabets/greek_button_rows.dart';
 import '../data/alphabets/english_to_greek.dart';
 import '../data/alphabets/english_greek_button_map.dart';
 import 'text_source_screen.dart';
+
+final Uri _boostyDonateUri = Uri.parse('https://boosty.to/daysw/donate');
 
 class LanguageSelectScreen extends StatelessWidget {
   final void Function(ThemeMode)? onThemeChanged;
@@ -119,6 +122,21 @@ class LanguageSelectScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.volunteer_activism_outlined),
+              title: Text('donate'.tr()),
+              onTap: () async {
+                Navigator.pop(context);
+                final ok = await launchUrl(
+                  _boostyDonateUri,
+                  mode: LaunchMode.externalApplication,
+                );
+                if (!context.mounted || ok) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('donate_error'.tr())),
                 );
               },
             ),
