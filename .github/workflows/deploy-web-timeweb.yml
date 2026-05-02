@@ -1,6 +1,5 @@
 # Сборка Flutter Web и выкладка в …/public_html/alphabet на Timeweb (остальной сайт не трогаем).
-# Секреты: TIMEWEB_SSH_KEY, TIMEWEB_HOST, TIMEWEB_USER, TIMEWEB_REMOTE_PATH.
-# Опционально: TIMEWEB_SSH_PORT (если пусто — используется 1429; для стандартного SSH задайте 22).
+# Секреты: TIMEWEB_SSH_KEY, TIMEWEB_HOST, TIMEWEB_USER, TIMEWEB_REMOTE_PATH (как у intellectshop.frontend).
 
 name: Build Flutter web and deploy to Timeweb
 
@@ -24,8 +23,6 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      TIMEWEB_SSH_PORT: ${{ secrets.TIMEWEB_SSH_PORT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -44,7 +41,6 @@ jobs:
           TIMEWEB_HOST: ${{ secrets.TIMEWEB_HOST }}
         run: |
           set -euo pipefail
-          SSH_PORT="${TIMEWEB_SSH_PORT:-1429}"
           if [[ -z "${SSH_PRIVATE_KEY:-}" ]]; then
             echo "::error::Секрет TIMEWEB_SSH_KEY пустой. Добавьте его в Settings → Secrets репозитория alphabet (как у intellectshop.frontend)."
             exit 1
@@ -59,8 +55,8 @@ jobs:
           chmod 600 ~/.ssh/timeweb_deploy
           touch ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
-          if ! ssh-keyscan -H -p "$SSH_PORT" -t rsa,ecdsa,ed25519 "$TIMEWEB_HOST" >> ~/.ssh/known_hosts 2>/tmp/keyscan.err; then
-            echo "::error::ssh-keyscan не смог получить ключ хоста $TIMEWEB_HOST:$SSH_PORT"
+          if ! ssh-keyscan -H -t rsa,ecdsa,ed25519 "$TIMEWEB_HOST" >> ~/.ssh/known_hosts 2>/tmp/keyscan.err; then
+            echo "::error::ssh-keyscan не смог получить ключ хоста $TIMEWEB_HOST"
             cat /tmp/keyscan.err || true
             exit 1
           fi
@@ -71,8 +67,7 @@ jobs:
           RPATH: ${{ secrets.TIMEWEB_REMOTE_PATH }}
         run: |
           set -euo pipefail
-          SSH_PORT="${TIMEWEB_SSH_PORT:-1429}"
           test -n "$RPATH"
           rsync -avz --delete \
-            -e "ssh -p $SSH_PORT -i $HOME/.ssh/timeweb_deploy -o IdentitiesOnly=yes -o BatchMode=yes" \
+            -e "ssh -i $HOME/.ssh/timeweb_deploy -o IdentitiesOnly=yes -o BatchMode=yes" \
             build/web/ "$REMOTE:$RPATH/alphabet/"
