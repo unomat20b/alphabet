@@ -12,6 +12,12 @@ import '../data/alphabets/english_to_georgian.dart';
 import '../data/alphabets/english_georgian_button_map.dart';
 import '../data/alphabets/english_to_hindi.dart';
 import '../data/alphabets/english_hindi_button_map.dart';
+import '../data/alphabets/armenian.dart';
+import '../data/alphabets/armenian_button_map.dart';
+import '../data/alphabets/armenian_letter_options.dart';
+import '../data/alphabets/armenian_button_rows.dart';
+import '../data/alphabets/english_to_armenian.dart';
+import '../data/alphabets/english_armenian_button_map.dart';
 import 'text_source_screen.dart';
 
 class LanguageSelectScreen extends StatelessWidget {
@@ -147,6 +153,23 @@ class LanguageSelectScreen extends StatelessWidget {
                           buttonPairs: isEnglish ? englishHindiButtonMap : hindiButtonMap,
                           letterOptions: hindiLetterOptions,
                           buttonRows: hindiButtonRows,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: Text('armenian'.tr()),
+                  onTap: () {
+                    final isEnglish = context.locale.languageCode == 'en';
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TextSourceScreen(
+                          pairs: isEnglish ? englishToArmenianMap : russianToArmenianMap,
+                          buttonPairs: isEnglish ? englishArmenianButtonMap : armenianButtonMap,
+                          letterOptions: armenianLetterOptions,
+                          buttonRows: armenianButtonRows,
                         ),
                       ),
                     );

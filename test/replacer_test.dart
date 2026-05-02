@@ -4,6 +4,8 @@ import 'package:alfabet/data/alphabets/georgian.dart';
 import 'package:alfabet/data/alphabets/hindi.dart';
 import 'package:alfabet/data/alphabets/georgian_letter_options.dart';
 import 'package:alfabet/data/alphabets/hindi_letter_options.dart';
+import 'package:alfabet/data/alphabets/armenian.dart';
+import 'package:alfabet/data/alphabets/armenian_letter_options.dart';
 
 void main() {
   test('Uppercase Р transforms to Georgian რ', () {
@@ -92,6 +94,28 @@ void main() {
     );
     expect(defaultRes, 'ყყ');
     expect(altRes, 'კკ');
+  });
+
+  test('Armenian: Russian а maps to ա', () {
+    expect(transformText('а', russianToArmenianMap), 'ա');
+  });
+
+  test('Armenian: т/тʼ via letter options', () {
+    const input = 'тт';
+    final plain = transformWithSelected(
+      input,
+      russianToArmenianMap,
+      {'տ'},
+      armenianLetterOptions,
+    );
+    final aspirated = transformWithSelected(
+      input,
+      russianToArmenianMap,
+      {'թ'},
+      armenianLetterOptions,
+    );
+    expect(plain, 'տտ');
+    expect(aspirated, 'թթ');
   });
 
   test('Hindi: same Russian т maps to dental or retroflex via letter options', () {
