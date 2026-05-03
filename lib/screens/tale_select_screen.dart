@@ -5,6 +5,20 @@ import 'package:easy_localization/easy_localization.dart';
 import 'edit_screen.dart';
 import '../widgets/telegram_section_card.dart';
 
+const _kTalesRu = [
+  'lib/data/tails/tail_ru_kolobok.md',
+  'lib/data/tails/tail_ru_doch_semiletka.md',
+  'lib/data/tails/tail_ru_kalinov_most.md',
+  'lib/data/tails/tail_ru_soldat_i_czarica.md',
+];
+
+const _kTalesEn = [
+  'lib/data/tails/tail_en_little_red_riding_hood.md',
+  'lib/data/tails/tail_en_goldilocks.md',
+  'lib/data/tails/tail_en_gingerbread_man.md',
+  'lib/data/tails/tail_en_ugly_duckling.md',
+];
+
 class TaleSelectScreen extends StatefulWidget {
   final Map<String, String> pairs;
   final Map<String, String> buttonPairs;
@@ -29,21 +43,15 @@ class _Tale {
 }
 
 class _TaleSelectScreenState extends State<TaleSelectScreen> {
-  late Future<List<_Tale>> _talesFuture;
+  Future<List<_Tale>>? _talesFuture;
+  String? _loadedForLang;
 
-  @override
-  void initState() {
-    super.initState();
-    _talesFuture = _loadTales();
+  List<String> _assetsForLocale(Locale locale) {
+    return locale.languageCode == 'en' ? _kTalesEn : _kTalesRu;
   }
 
-  Future<List<_Tale>> _loadTales() async {
-    const assets = [
-      'lib/data/tails/Text1.md',
-      'lib/data/tails/Text2.md',
-      'lib/data/tails/Text3.md',
-      'lib/data/tails/Text4.md',
-    ];
+  Future<List<_Tale>> _loadTales(Locale locale) async {
+    final assets = _assetsForLocale(locale);
     final tales = <_Tale>[];
     for (final asset in assets) {
       final data = await rootBundle.loadString(asset);
@@ -51,6 +59,16 @@ class _TaleSelectScreenState extends State<TaleSelectScreen> {
       tales.add(_Tale(asset, title));
     }
     return tales;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final lang = context.locale.languageCode;
+    if (_loadedForLang != lang) {
+      _loadedForLang = lang;
+      _talesFuture = _loadTales(context.locale);
+    }
   }
 
   Future<void> _openTale(String asset) async {
