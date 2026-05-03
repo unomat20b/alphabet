@@ -1,9 +1,17 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 
 /// POST в тот же endpoint, что и сайт IntellectShop (`/api-feedback`).
-const _feedbackUri = 'https://intellectshop.net/api-feedback';
+/// В веб-сборке используется origin текущей страницы (тот же хост, что и `/alphabet/`).
+Uri _feedbackEndpoint() {
+  if (kIsWeb) {
+    final base = Uri.base;
+    return base.replace(path: '/api-feedback', queryParameters: const {});
+  }
+  return Uri.parse('https://intellectshop.net/api-feedback');
+}
 
 class FeedbackSubmitResult {
   final bool ok;
@@ -24,7 +32,7 @@ class FeedbackApi {
     final trimmedMessage = message.trim();
 
     try {
-      final request = http.MultipartRequest('POST', Uri.parse(_feedbackUri));
+      final request = http.MultipartRequest('POST', _feedbackEndpoint());
       request.fields['name'] = trimmedName.isEmpty ? '-' : trimmedName;
       request.fields['email'] = trimmedEmail;
       request.fields['message'] = trimmedMessage;
@@ -38,7 +46,7 @@ class FeedbackApi {
       final code = streamed.statusCode;
 
       if (code < 200 || code >= 300) {
-        return FeedbackSubmitResult.fail('HTTP $code');
+        return FeedbackSubmitResult.fail('http_$code');
       }
 
       final trimmed = body.trim();

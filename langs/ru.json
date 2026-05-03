@@ -55,6 +55,7 @@
   "feedback_cancel": "Отмена",
   "feedback_success": "Спасибо, сообщение отправлено.",
   "feedback_error": "Не удалось отправить. Попробуйте позже.",
+  "feedback_error_http": "Сервер ответил с кодом {code}. Часто это из‑за настройки хоста: должен проксироваться путь /api-feedback в MODX (см. .htaccess сайта).",
   "text_settings_tooltip": "Настройки текста",
   "text_size_label": "Размер:",
   "text_color_label": "Цвет:",

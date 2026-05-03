@@ -43,8 +43,12 @@ class _FeedbackDialogBodyState extends State<_FeedbackDialogBody> {
     if (!mounted) return;
     setState(() => _sending = false);
     if (!result.ok) {
+      final m = result.message;
+      final text = m != null && m.startsWith('http_')
+          ? 'feedback_error_http'.tr(namedArgs: {'code': m.substring(5)})
+          : 'feedback_error'.tr();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('feedback_error'.tr())),
+        SnackBar(content: Text(text)),
       );
       return;
     }

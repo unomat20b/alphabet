@@ -55,6 +55,7 @@
   "feedback_cancel": "Cancel",
   "feedback_success": "Thank you — your message was sent.",
   "feedback_error": "Could not send. Please try again later.",
+  "feedback_error_http": "The server returned HTTP {code}. Often the host must route /api-feedback to MODX (see site .htaccess / nginx).",
   "text_settings_tooltip": "Text settings",
   "text_size_label": "Size:",
   "text_color_label": "Color:",
