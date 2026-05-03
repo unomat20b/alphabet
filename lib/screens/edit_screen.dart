@@ -119,6 +119,11 @@ class _EditScreenState extends State<EditScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
+            void bump() {
+              setState(() {});
+              setModalState(() {});
+            }
+
             return Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -126,14 +131,15 @@ class _EditScreenState extends State<EditScreen> {
                 children: [
                   Row(
                     children: [
-                      const Text('Размер:'),
+                      Text('text_size_label'.tr()),
                       const SizedBox(width: 12),
                       IconButton(
                         icon: const Icon(Icons.text_decrease),
                         onPressed: _fontSizeIndex > 0
-                            ? () => setState(() {
+                            ? () {
                                 if (_fontSizeIndex > 0) _fontSizeIndex--;
-                              })
+                                bump();
+                              }
                             : null,
                       ),
                       Text('а', style: TextStyle(fontSize: _fontSizes[0])),
@@ -142,11 +148,12 @@ class _EditScreenState extends State<EditScreen> {
                       IconButton(
                         icon: const Icon(Icons.text_increase),
                         onPressed: _fontSizeIndex < _fontSizes.length - 1
-                            ? () => setState(() {
+                            ? () {
                                 if (_fontSizeIndex < _fontSizes.length - 1) {
                                   _fontSizeIndex++;
                                 }
-                              })
+                                bump();
+                              }
                             : null,
                       ),
                     ],
@@ -154,14 +161,16 @@ class _EditScreenState extends State<EditScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text('Цвет:'),
+                      Text('text_color_label'.tr()),
                       const SizedBox(width: 12),
                       for (int i = 0; i < _colorOptions.length; i++)
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: GestureDetector(
-                            onTap: () =>
-                                setState(() => _textColor = _colorOptions[i]),
+                            onTap: () {
+                              setState(() => _textColor = _colorOptions[i]);
+                              setModalState(() {});
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -184,15 +193,13 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                   Row(
                     children: [
-                      const Text('Жирный:'),
-                      StatefulBuilder(
-                        builder: (context, setSwitchState) => Switch(
-                          value: _isBold,
-                          onChanged: (v) {
-                            setState(() => _isBold = v);
-                            setModalState(() {});
-                          },
-                        ),
+                      Text('text_bold_label'.tr()),
+                      Switch(
+                        value: _isBold,
+                        onChanged: (v) {
+                          setState(() => _isBold = v);
+                          setModalState(() {});
+                        },
                       ),
                     ],
                   ),
@@ -224,7 +231,7 @@ class _EditScreenState extends State<EditScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            tooltip: 'Настройки',
+            tooltip: 'text_settings_tooltip'.tr(),
             onPressed: _openSettings,
           ),
         ],

@@ -27,6 +27,7 @@ import '../data/alphabets/english_to_greek.dart';
 import '../data/alphabets/english_greek_button_map.dart';
 import 'text_source_screen.dart';
 import '../widgets/telegram_section_card.dart';
+import '../widgets/feedback_dialog.dart';
 
 final Uri _boostyDonateUri = Uri.parse('https://boosty.to/daysw/donate');
 final Uri _intellectshopProjectsUri =
@@ -181,6 +182,15 @@ class LanguageSelectScreen extends StatelessWidget {
                                 ],
                               ),
                             );
+                          },
+                        ),
+                        const Divider(height: 1),
+                        ListTile(
+                          leading: const Icon(Icons.chat_bubble_outline),
+                          title: Text('feedback_menu'.tr()),
+                          onTap: () {
+                            Navigator.pop(context);
+                            showFeedbackDialog(context);
                           },
                         ),
                         const Divider(height: 1),
