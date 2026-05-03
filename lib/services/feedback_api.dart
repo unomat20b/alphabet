@@ -4,11 +4,16 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 
 /// POST в тот же endpoint, что и сайт IntellectShop (`/api-feedback`).
-/// В веб-сборке используется origin текущей страницы (тот же хост, что и `/alphabet/`).
+///
+/// В веб-сборке используем [Uri.base.origin] + `/api-feedback` — явный
+/// абсолютный URL в корне сайта (как у `curl …/api-feedback`).
 Uri _feedbackEndpoint() {
   if (kIsWeb) {
-    final base = Uri.base;
-    return base.replace(path: '/api-feedback', queryParameters: const {});
+    final origin = Uri.base.origin;
+    if (origin.isEmpty) {
+      return Uri.parse('https://intellectshop.net/api-feedback');
+    }
+    return Uri.parse('$origin/api-feedback');
   }
   return Uri.parse('https://intellectshop.net/api-feedback');
 }
@@ -33,6 +38,7 @@ class FeedbackApi {
 
     try {
       final request = http.MultipartRequest('POST', _feedbackEndpoint());
+      request.headers['Cache-Control'] = 'no-cache';
       request.fields['name'] = trimmedName.isEmpty ? '-' : trimmedName;
       request.fields['email'] = trimmedEmail;
       request.fields['message'] = trimmedMessage;
